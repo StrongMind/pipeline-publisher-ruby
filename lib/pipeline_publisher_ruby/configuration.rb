@@ -12,7 +12,7 @@ Swagger Codegen version: 2.3.1
 
 require 'uri'
 
-module PipelinePublisherRuby
+module PipelinePublisher
   class Configuration
     # Defines url scheme
     attr_accessor :scheme

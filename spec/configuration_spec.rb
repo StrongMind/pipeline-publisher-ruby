@@ -12,14 +12,14 @@ Swagger Codegen version: 2.3.1
 
 require 'spec_helper'
 
-describe PipelinePublisherRuby::Configuration do
-  let(:config) { PipelinePublisherRuby::Configuration.default }
+describe PipelinePublisher::Configuration do
+  let(:config) { PipelinePublisher::Configuration.default }
 
   before(:each) do
     # uncomment below to setup host and base_path
     #require 'URI'
     #uri = URI.parse("https://localhost")
-    #PipelinePublisherRuby.configure do |c|
+    #PipelinePublisher.configure do |c|
     #  c.host = uri.host
     #  c.base_path = uri.path
     #end

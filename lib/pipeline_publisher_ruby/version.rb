@@ -10,6 +10,6 @@ Swagger Codegen version: 2.3.1
 
 =end
 
-module PipelinePublisherRuby
+module PipelinePublisher
   VERSION = "1.0.0"
 end

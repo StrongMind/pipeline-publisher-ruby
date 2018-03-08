@@ -1,4 +1,4 @@
-# PipelinePublisherRuby::Message
+# PipelinePublisher::Message
 
 ## Properties
 Name | Type | Description | Notes

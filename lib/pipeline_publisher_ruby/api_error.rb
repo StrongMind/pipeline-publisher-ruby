@@ -10,7 +10,7 @@ Swagger Codegen version: 2.3.1
 
 =end
 
-module PipelinePublisherRuby
+module PipelinePublisher
   class ApiError < StandardError
     attr_reader :code, :response_headers, :response_body
 

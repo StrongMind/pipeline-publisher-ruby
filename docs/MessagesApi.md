@@ -1,4 +1,4 @@
-# PipelinePublisherRuby::MessagesApi
+# PipelinePublisher::MessagesApi
 
 All URIs are relative to *https://localhost*
 
@@ -17,21 +17,21 @@ Creates a message on the pipeline
 # load the gem
 require 'pipeline_publisher_ruby'
 # setup authorization
-PipelinePublisherRuby.configure do |config|
+PipelinePublisher.configure do |config|
   # Configure HTTP basic authorization: basic
   config.username = 'YOUR USERNAME'
   config.password = 'YOUR PASSWORD'
 end
 
-api_instance = PipelinePublisherRuby::MessagesApi.new
+api_instance = PipelinePublisher::MessagesApi.new
 
-message = PipelinePublisherRuby::Message.new # Message | Note: At least one key/value pair for identifiers field is required.
+message = PipelinePublisher::Message.new # Message | Note: At least one key/value pair for identifiers field is required.
 
 
 begin
   #Creates a message on the pipeline
   api_instance.messages_post(message)
-rescue PipelinePublisherRuby::ApiError => e
+rescue PipelinePublisher::ApiError => e
   puts "Exception when calling MessagesApi->messages_post: #{e}"
 end
 ```

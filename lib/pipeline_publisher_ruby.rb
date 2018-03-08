@@ -22,10 +22,10 @@ require 'pipeline_publisher_ruby/models/message'
 # APIs
 require 'pipeline_publisher_ruby/api/messages_api'
 
-module PipelinePublisherRuby
+module PipelinePublisher
   class << self
     # Customize default settings for the SDK using block.
-    #   PipelinePublisherRuby.configure do |config|
+    #   PipelinePublisher.configure do |config|
     #     config.username = "xxx"
     #     config.password = "xxx"
     #   end

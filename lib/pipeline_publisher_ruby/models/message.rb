@@ -12,7 +12,7 @@ Swagger Codegen version: 2.3.1
 
 require 'date'
 
-module PipelinePublisherRuby
+module PipelinePublisher
 
   class Message
     attr_accessor :noun
@@ -173,7 +173,7 @@ module PipelinePublisherRuby
           end
         end
       else # model
-        temp_model = PipelinePublisherRuby.const_get(type).new
+        temp_model = PipelinePublisher.const_get(type).new
         temp_model.build_from_hash(value)
       end
     end

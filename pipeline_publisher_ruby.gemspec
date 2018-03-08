@@ -17,7 +17,7 @@ require "pipeline_publisher_ruby/version"
 
 Gem::Specification.new do |s|
   s.name        = "pipeline_publisher_ruby"
-  s.version     = PipelinePublisherRuby::VERSION
+  s.version     = PipelinePublisher::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Swagger-Codegen"]
   s.email       = [""]
