@@ -17,6 +17,8 @@ require 'pipeline_publisher_ruby/version'
 require 'pipeline_publisher_ruby/configuration'
 
 # Models
+require 'pipeline_publisher_ruby/models/inline_response_200'
+require 'pipeline_publisher_ruby/models/inline_response_200_messages_received'
 require 'pipeline_publisher_ruby/models/message'
 
 # APIs

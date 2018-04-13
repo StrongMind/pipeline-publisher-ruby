@@ -87,6 +87,8 @@ Class | Method | HTTP request | Description
 
 ## Documentation for Models
 
+ - [PipelinePublisher::InlineResponse200](docs/InlineResponse200.md)
+ - [PipelinePublisher::InlineResponse200MessagesReceived](docs/InlineResponse200MessagesReceived.md)
  - [PipelinePublisher::Message](docs/Message.md)
 
 

@@ -24,17 +24,17 @@ module PipelinePublisher
     # 
     # @param [Hash] opts the optional parameters
     # @option opts [String] :count_since_timestamp ISO 8601 compliant timestamp to perform message count calculations from. Example: 2018-04-12T23:54:57.595Z
-    # @return [nil]
+    # @return [InlineResponse200]
     def stream_metrics_get(opts = {})
-      stream_metrics_get_with_http_info(opts)
-      return nil
+      data, _status_code, _headers = stream_metrics_get_with_http_info(opts)
+      return data
     end
 
     # Fetches metrics about the stream
     # 
     # @param [Hash] opts the optional parameters
     # @option opts [String] :count_since_timestamp ISO 8601 compliant timestamp to perform message count calculations from. Example: 2018-04-12T23:54:57.595Z
-    # @return [Array<(nil, Fixnum, Hash)>] nil, response status code and response headers
+    # @return [Array<(InlineResponse200, Fixnum, Hash)>] InlineResponse200 data, response status code and response headers
     def stream_metrics_get_with_http_info(opts = {})
       if @api_client.config.debugging
         @api_client.config.logger.debug "Calling API: StreamMetricsApi.stream_metrics_get ..."
@@ -48,6 +48,8 @@ module PipelinePublisher
 
       # header parameters
       header_params = {}
+      # HTTP header 'Accept' (if needed)
+      header_params['Accept'] = @api_client.select_header_accept(['application/json'])
       # HTTP header 'Content-Type'
       header_params['Content-Type'] = @api_client.select_header_content_type(['application/json'])
 
@@ -62,7 +64,8 @@ module PipelinePublisher
         :query_params => query_params,
         :form_params => form_params,
         :body => post_body,
-        :auth_names => auth_names)
+        :auth_names => auth_names,
+        :return_type => 'InlineResponse200')
       if @api_client.config.debugging
         @api_client.config.logger.debug "API called: StreamMetricsApi#stream_metrics_get\nData: #{data.inspect}\nStatus code: #{status_code}\nHeaders: #{headers}"
       end

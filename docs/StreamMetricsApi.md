@@ -8,7 +8,7 @@ Method | HTTP request | Description
 
 
 # **stream_metrics_get**
-> stream_metrics_get(opts)
+> InlineResponse200 stream_metrics_get(opts)
 
 Fetches metrics about the stream
 
@@ -31,7 +31,8 @@ opts = {
 
 begin
   #Fetches metrics about the stream
-  api_instance.stream_metrics_get(opts)
+  result = api_instance.stream_metrics_get(opts)
+  p result
 rescue PipelinePublisher::ApiError => e
   puts "Exception when calling StreamMetricsApi->stream_metrics_get: #{e}"
 end
@@ -45,7 +46,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-nil (empty response body)
+[**InlineResponse200**](InlineResponse200.md)
 
 ### Authorization
 
@@ -54,7 +55,7 @@ nil (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 
