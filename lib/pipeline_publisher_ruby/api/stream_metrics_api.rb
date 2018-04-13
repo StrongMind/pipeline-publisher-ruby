@@ -13,41 +13,38 @@ Swagger Codegen version: 2.3.1
 require "uri"
 
 module PipelinePublisher
-  class MessagesApi
+  class StreamMetricsApi
     attr_accessor :api_client
 
     def initialize(api_client = ApiClient.default)
       @api_client = api_client
     end
 
-    # Creates a message on the pipeline
+    # Fetches metrics about the stream
     # 
-    # @param message Note: At least one key/value pair for identifiers field is required.
     # @param [Hash] opts the optional parameters
+    # @option opts [String] :count_since_timestamp ISO 8601 compliant timestamp to perform message count calculations from. Example: 2018-04-12T23:54:57.595Z
     # @return [nil]
-    def messages_post(message, opts = {})
-      messages_post_with_http_info(message, opts)
+    def stream_metrics_get(opts = {})
+      stream_metrics_get_with_http_info(opts)
       return nil
     end
 
-    # Creates a message on the pipeline
+    # Fetches metrics about the stream
     # 
-    # @param message Note: At least one key/value pair for identifiers field is required.
     # @param [Hash] opts the optional parameters
+    # @option opts [String] :count_since_timestamp ISO 8601 compliant timestamp to perform message count calculations from. Example: 2018-04-12T23:54:57.595Z
     # @return [Array<(nil, Fixnum, Hash)>] nil, response status code and response headers
-    def messages_post_with_http_info(message, opts = {})
+    def stream_metrics_get_with_http_info(opts = {})
       if @api_client.config.debugging
-        @api_client.config.logger.debug "Calling API: MessagesApi.messages_post ..."
-      end
-      # verify the required parameter 'message' is set
-      if @api_client.config.client_side_validation && message.nil?
-        fail ArgumentError, "Missing the required parameter 'message' when calling MessagesApi.messages_post"
+        @api_client.config.logger.debug "Calling API: StreamMetricsApi.stream_metrics_get ..."
       end
       # resource path
-      local_var_path = "/messages"
+      local_var_path = "/stream_metrics"
 
       # query parameters
       query_params = {}
+      query_params[:'count_since_timestamp'] = opts[:'count_since_timestamp'] if !opts[:'count_since_timestamp'].nil?
 
       # header parameters
       header_params = {}
@@ -58,16 +55,16 @@ module PipelinePublisher
       form_params = {}
 
       # http body (model)
-      post_body = @api_client.object_to_http_body(message)
+      post_body = nil
       auth_names = ['basic']
-      data, status_code, headers = @api_client.call_api(:POST, local_var_path,
+      data, status_code, headers = @api_client.call_api(:GET, local_var_path,
         :header_params => header_params,
         :query_params => query_params,
         :form_params => form_params,
         :body => post_body,
         :auth_names => auth_names)
       if @api_client.config.debugging
-        @api_client.config.logger.debug "API called: MessagesApi#messages_post\nData: #{data.inspect}\nStatus code: #{status_code}\nHeaders: #{headers}"
+        @api_client.config.logger.debug "API called: StreamMetricsApi#stream_metrics_get\nData: #{data.inspect}\nStatus code: #{status_code}\nHeaders: #{headers}"
       end
       return data, status_code, headers
     end
