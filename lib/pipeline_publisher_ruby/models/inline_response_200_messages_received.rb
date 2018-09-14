@@ -17,6 +17,8 @@ module PipelinePublisher
   class InlineResponse200MessagesReceived
     attr_accessor :since_timestamp
 
+    attr_accessor :until_timestamp
+
     attr_accessor :count
 
 
@@ -24,6 +26,7 @@ module PipelinePublisher
     def self.attribute_map
       {
         :'since_timestamp' => :'since_timestamp',
+        :'until_timestamp' => :'until_timestamp',
         :'count' => :'count'
       }
     end
@@ -32,6 +35,7 @@ module PipelinePublisher
     def self.swagger_types
       {
         :'since_timestamp' => :'String',
+        :'until_timestamp' => :'String',
         :'count' => :'Integer'
       }
     end
@@ -46,6 +50,10 @@ module PipelinePublisher
 
       if attributes.has_key?(:'since_timestamp')
         self.since_timestamp = attributes[:'since_timestamp']
+      end
+
+      if attributes.has_key?(:'until_timestamp')
+        self.until_timestamp = attributes[:'until_timestamp']
       end
 
       if attributes.has_key?(:'count')
@@ -73,6 +81,7 @@ module PipelinePublisher
       return true if self.equal?(o)
       self.class == o.class &&
           since_timestamp == o.since_timestamp &&
+          until_timestamp == o.until_timestamp &&
           count == o.count
     end
 
@@ -85,7 +94,7 @@ module PipelinePublisher
     # Calculates hash code according to all attributes.
     # @return [Fixnum] Hash code
     def hash
-      [since_timestamp, count].hash
+      [since_timestamp, until_timestamp, count].hash
     end
 
     # Builds the object from hash

@@ -23,7 +23,8 @@ module PipelinePublisher
     # Fetches metrics about the stream
     # 
     # @param [Hash] opts the optional parameters
-    # @option opts [String] :count_since_timestamp ISO 8601 compliant timestamp to perform message count calculations from. Example: 2018-04-12T23:54:57.595Z
+    # @option opts [String] :count_since_timestamp ISO 8601 compliant timestamp to perform message count calculations from. Example: 2018-04-12T23:54:57.595123Z
+    # @option opts [String] :count_until_timestamp ISO 8601 compliant timestamp to perform message count calculations until. Example: 2018-04-12T23:54:57.595123Z
     # @return [InlineResponse200]
     def stream_metrics_get(opts = {})
       data, _status_code, _headers = stream_metrics_get_with_http_info(opts)
@@ -33,7 +34,8 @@ module PipelinePublisher
     # Fetches metrics about the stream
     # 
     # @param [Hash] opts the optional parameters
-    # @option opts [String] :count_since_timestamp ISO 8601 compliant timestamp to perform message count calculations from. Example: 2018-04-12T23:54:57.595Z
+    # @option opts [String] :count_since_timestamp ISO 8601 compliant timestamp to perform message count calculations from. Example: 2018-04-12T23:54:57.595123Z
+    # @option opts [String] :count_until_timestamp ISO 8601 compliant timestamp to perform message count calculations until. Example: 2018-04-12T23:54:57.595123Z
     # @return [Array<(InlineResponse200, Fixnum, Hash)>] InlineResponse200 data, response status code and response headers
     def stream_metrics_get_with_http_info(opts = {})
       if @api_client.config.debugging
@@ -45,6 +47,7 @@ module PipelinePublisher
       # query parameters
       query_params = {}
       query_params[:'count_since_timestamp'] = opts[:'count_since_timestamp'] if !opts[:'count_since_timestamp'].nil?
+      query_params[:'count_until_timestamp'] = opts[:'count_until_timestamp'] if !opts[:'count_until_timestamp'].nil?
 
       # header parameters
       header_params = {}

@@ -26,7 +26,8 @@ end
 api_instance = PipelinePublisher::StreamMetricsApi.new
 
 opts = { 
-  count_since_timestamp: "count_since_timestamp_example" # String | ISO 8601 compliant timestamp to perform message count calculations from. Example: 2018-04-12T23:54:57.595Z
+  count_since_timestamp: "count_since_timestamp_example", # String | ISO 8601 compliant timestamp to perform message count calculations from. Example: 2018-04-12T23:54:57.595123Z
+  count_until_timestamp: "count_until_timestamp_example" # String | ISO 8601 compliant timestamp to perform message count calculations until. Example: 2018-04-12T23:54:57.595123Z
 }
 
 begin
@@ -42,7 +43,8 @@ end
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **count_since_timestamp** | **String**| ISO 8601 compliant timestamp to perform message count calculations from. Example: 2018-04-12T23:54:57.595Z | [optional] 
+ **count_since_timestamp** | **String**| ISO 8601 compliant timestamp to perform message count calculations from. Example: 2018-04-12T23:54:57.595123Z | [optional] 
+ **count_until_timestamp** | **String**| ISO 8601 compliant timestamp to perform message count calculations until. Example: 2018-04-12T23:54:57.595123Z | [optional] 
 
 ### Return type
 
