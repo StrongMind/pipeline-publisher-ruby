@@ -11,6 +11,8 @@ Swagger Codegen version: 2.3.1
 =end
 
 require 'spec_helper'
+require 'webmock/rspec'
+require 'factory_bot'
 
 describe PipelinePublisher::ApiClient do
   context 'initialization' do
@@ -86,6 +88,25 @@ describe PipelinePublisher::ApiClient do
       config.timeout = 100
       request = api_client.build_request(:get, '/test')
       expect(request.options[:timeout]).to eq(100)
+    end
+  end
+
+  describe 'retry attempts in #build_request' do
+    let(:config) { PipelinePublisher::Configuration.new }
+    let(:api_client) { FactoryBot.build(:api_client, config: config) }
+
+    it 'retries the request with the specified number of attempts' do
+      # Stub the request using WebMock
+      stub_request(:get, 'https://example.com/test')
+        .to_return(status: 500, body: 'Fail')
+
+      # Make the request multiple times
+      attempts = 3
+      response = nil
+      response = api_client.call_api(:GET, 'https://example.com/test')
+      expect(WebMock).to have_requested(:get, /example\.com\/test/).times(attempts + 1)
+      expect(response.status).to eq(500)
+      expect(response.body).to eq('Fail')
     end
   end
 
