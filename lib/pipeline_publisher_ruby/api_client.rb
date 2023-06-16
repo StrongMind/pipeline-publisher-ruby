@@ -59,21 +59,17 @@ module PipelinePublisher
         end
 
         unless response.success?
-          if(attempts += 1) < 5
-            raise
+          if response.timed_out?
+            fail ApiError.new('Connection timed out')
+          elsif response.code == 0
+            # Errors from libcurl will be made visible here
+            fail ApiError.new(:code => 0,
+                              :message => response.return_message)
           else
-            if response.timed_out?
-              fail ApiError.new('Connection timed out')
-            elsif response.code == 0
-              # Errors from libcurl will be made visible here
-              fail ApiError.new(:code => 0,
-                                :message => response.return_message)
-            else
-              fail ApiError.new(:code => response.code,
-                                :response_headers => response.headers,
-                                :response_body => response.body),
-                   response.status_message
-            end
+            fail ApiError.new(:code => response.code,
+                              :response_headers => response.headers,
+                              :response_body => response.body),
+                 response.status_message
           end
         end
 
@@ -83,8 +79,10 @@ module PipelinePublisher
           data = nil
         end
 
-        rescue
-          retry
+      rescue
+        attempts += 1
+        retry if attempts <= 5
+        fail ApiError.new('Maximum number of attempts reached')
 
       end
 
@@ -151,7 +149,7 @@ module PipelinePublisher
     # @param [String] mime MIME
     # @return [Boolean] True if the MIME is application/json
     def json_mime?(mime)
-       (mime == "*/*") || !(mime =~ /Application\/.*json(?!p)(;.*)?/i).nil?
+      (mime == "*/*") || !(mime =~ /Application\/.*json(?!p)(;.*)?/i).nil?
     end
 
     # Deserialize the response to the given return type.
@@ -215,12 +213,12 @@ module PipelinePublisher
       when /\AArray<(.+)>\z/
         # e.g. Array<Pet>
         sub_type = $1
-        data.map {|item| convert_to_type(item, sub_type) }
+        data.map { |item| convert_to_type(item, sub_type) }
       when /\AHash\<String, (.+)\>\z/
         # e.g. Hash<String, Integer>
         sub_type = $1
         {}.tap do |hash|
-          data.each {|k, v| hash[k] = convert_to_type(v, sub_type) }
+          data.each { |k, v| hash[k] = convert_to_type(v, sub_type) }
         end
       else
         # models, e.g. Pet
@@ -290,7 +288,7 @@ module PipelinePublisher
     def build_request_body(header_params, form_params, body)
       # http form
       if header_params['Content-Type'] == 'application/x-www-form-urlencoded' ||
-          header_params['Content-Type'] == 'multipart/form-data'
+        header_params['Content-Type'] == 'multipart/form-data'
         data = {}
         form_params.each do |key, value|
           case value
@@ -320,7 +318,7 @@ module PipelinePublisher
         next unless auth_setting
         case auth_setting[:in]
         when 'header' then header_params[auth_setting[:key]] = auth_setting[:value]
-        when 'query'  then query_params[auth_setting[:key]] = auth_setting[:value]
+        when 'query' then query_params[auth_setting[:key]] = auth_setting[:value]
         else fail ArgumentError, 'Authentication token must be in `query` of `header`'
         end
       end
@@ -362,7 +360,7 @@ module PipelinePublisher
       return model if model.nil? || model.is_a?(String)
       local_body = nil
       if model.is_a?(Array)
-        local_body = model.map{|m| object_to_hash(m) }
+        local_body = model.map { |m| object_to_hash(m) }
       else
         local_body = object_to_hash(model)
       end
