@@ -60,7 +60,7 @@ module PipelinePublisher
 
         unless response.success?
           if(attempts += 1) < 5
-            retry
+            raise
           else
             if response.timed_out?
               fail ApiError.new('Connection timed out')
@@ -82,6 +82,10 @@ module PipelinePublisher
         else
           data = nil
         end
+
+        rescue
+          retry
+
       end
 
       return data, response.code, response.headers
