@@ -48,32 +48,42 @@ module PipelinePublisher
     #   the data deserialized from response body (could be nil), response status code and response headers.
     def call_api(http_method, path, opts = {})
       request = build_request(http_method, path, opts)
-      response = request.run
 
-      if @config.debugging
-        @config.logger.debug "HTTP response body ~BEGIN~\n#{response.body}\n~END~\n"
-      end
+      begin
+        attempts ||= 0
 
-      unless response.success?
-        if response.timed_out?
-          fail ApiError.new('Connection timed out')
-        elsif response.code == 0
-          # Errors from libcurl will be made visible here
-          fail ApiError.new(:code => 0,
-                            :message => response.return_message)
+        response = request.run
+
+        if @config.debugging
+          @config.logger.debug "HTTP response body ~BEGIN~\n#{response.body}\n~END~\n"
+        end
+
+        unless response.success?
+          if(attempts += 1) < 5
+            retry
+          else
+            if response.timed_out?
+              fail ApiError.new('Connection timed out')
+            elsif response.code == 0
+              # Errors from libcurl will be made visible here
+              fail ApiError.new(:code => 0,
+                                :message => response.return_message)
+            else
+              fail ApiError.new(:code => response.code,
+                                :response_headers => response.headers,
+                                :response_body => response.body),
+                   response.status_message
+            end
+          end
+        end
+
+        if opts[:return_type]
+          data = deserialize(response, opts[:return_type])
         else
-          fail ApiError.new(:code => response.code,
-                            :response_headers => response.headers,
-                            :response_body => response.body),
-               response.status_message
+          data = nil
         end
       end
 
-      if opts[:return_type]
-        data = deserialize(response, opts[:return_type])
-      else
-        data = nil
-      end
       return data, response.code, response.headers
     end
 
