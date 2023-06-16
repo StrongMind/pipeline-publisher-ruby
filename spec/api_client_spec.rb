@@ -11,6 +11,8 @@ Swagger Codegen version: 2.3.1
 =end
 
 require 'spec_helper'
+require 'webmock/rspec'
+require 'factory_bot'
 
 describe PipelinePublisher::ApiClient do
   context 'initialization' do
@@ -89,10 +91,28 @@ describe PipelinePublisher::ApiClient do
     end
   end
 
+  describe 'retry attempts in #build_request' do
+    let(:config) { PipelinePublisher::Configuration.new }
+    let(:api_client) { FactoryBot.build(:api_client, config: config) }
+
+    it 'retries the request with the specified number of attempts' do
+      stub_request(:get, "https://example.com/test").
+        with(
+          headers: {
+            'Content-Type' => 'application/json',
+            'Expect' => '',
+            'User-Agent' => 'Swagger-Codegen/1.0.2/ruby'
+          }).
+        to_return(status: 500, body: "", headers: {})
+
+      expect { api_client.call_api(:GET, URI.encode('example.com/test')) }.to raise_error(PipelinePublisher::ApiError, 'Maximum number of attempts reached')
+    end
+  end
+
   describe "#deserialize" do
     it "handles Array<Integer>" do
       api_client = PipelinePublisher::ApiClient.new
-      headers = {'Content-Type' => 'application/json'}
+      headers = { 'Content-Type' => 'application/json' }
       response = double('response', headers: headers, body: '[12, 34]')
       data = api_client.deserialize(response, 'Array<Integer>')
       expect(data).to be_instance_of(Array)
@@ -101,7 +121,7 @@ describe PipelinePublisher::ApiClient do
 
     it "handles Array<Array<Integer>>" do
       api_client = PipelinePublisher::ApiClient.new
-      headers = {'Content-Type' => 'application/json'}
+      headers = { 'Content-Type' => 'application/json' }
       response = double('response', headers: headers, body: '[[12, 34], [56]]')
       data = api_client.deserialize(response, 'Array<Array<Integer>>')
       expect(data).to be_instance_of(Array)
@@ -110,24 +130,11 @@ describe PipelinePublisher::ApiClient do
 
     it "handles Hash<String, String>" do
       api_client = PipelinePublisher::ApiClient.new
-      headers = {'Content-Type' => 'application/json'}
+      headers = { 'Content-Type' => 'application/json' }
       response = double('response', headers: headers, body: '{"message": "Hello"}')
       data = api_client.deserialize(response, 'Hash<String, String>')
       expect(data).to be_instance_of(Hash)
-      expect(data).to eq({:message => 'Hello'})
-    end
-  end
-
-  describe "#object_to_hash" do
-    it "ignores nils and includes empty arrays" do
-      # uncomment below to test object_to_hash for model
-      #api_client = PipelinePublisher::ApiClient.new
-      #_model = PipelinePublisher::ModelName.new
-      # update the model attribute below
-      #_model.id = 1 
-      # update the expected value (hash) below
-      #expected = {id: 1, name: '', tags: []}
-      #expect(api_client.object_to_hash(_model)).to eq(expected)
+      expect(data).to eq({ :message => 'Hello' })
     end
   end
 
