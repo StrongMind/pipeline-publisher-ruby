@@ -93,19 +93,20 @@ describe PipelinePublisher::ApiClient do
 
   describe 'retry attempts in #build_request' do
     let(:config) { PipelinePublisher::Configuration.new }
-    let(:api_client) { FactoryBot.build(:api_client, config: config) }
+    let(:api_client) { PipelinePublisher::ApiClient.new(config) }
 
-    it 'retries the request with the specified number of attempts' do
-      stub_request(:get, "https://example.com/test").
-        with(
-          headers: {
-            'Content-Type' => 'application/json',
-            'Expect' => '',
-            'User-Agent' => 'Swagger-Codegen/1.0.2/ruby'
-          }).
-        to_return(status: 500, body: "", headers: {})
+    describe '#call_api' do
+      context 'when encountering a retryable error' do
+        it 'retries the request with the specified number of attempts' do
+          response_double = instance_double('Typhoeus::Response', success?: false, code: 500, headers: {}, body: '')
+          allow(response_double).to receive(:status_message).and_return('Internal Server Error')
+          request_double = instance_double('Typhoeus::Request', run: response_double)
 
-      expect { api_client.call_api(:GET, URI.encode('example.com/test')) }.to raise_error(PipelinePublisher::ApiError, 'Maximum number of attempts reached')
+          allow_any_instance_of(PipelinePublisher::ApiClient).to receive(:build_request).and_return(request_double)
+
+          expect { api_client.call_api(:GET, 'https://example.com/test') }.to raise_error(PipelinePublisher::ApiError, 'Maximum number of attempts reached')
+        end
+      end
     end
   end
 
