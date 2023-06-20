@@ -99,11 +99,9 @@ describe PipelinePublisher::ApiClient do
       context 'when encountering a retryable error' do
         it 'retries the request with the specified number of attempts' do
           response_double = instance_double('Typhoeus::Response', success?: false, code: 500, headers: {}, body: '')
-          allow(response_double).to receive(:status_message).and_return('Internal Server Error') # Add this line
-
+          allow(response_double).to receive(:status_message).and_return('Internal Server Error')
           request_double = instance_double('Typhoeus::Request', run: response_double)
 
-          # Stub out the request.run method
           allow_any_instance_of(PipelinePublisher::ApiClient).to receive(:build_request).and_return(request_double)
 
           expect { api_client.call_api(:GET, 'https://example.com/test') }.to raise_error(PipelinePublisher::ApiError, 'Maximum number of attempts reached')
