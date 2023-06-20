@@ -99,7 +99,6 @@ describe PipelinePublisher::ApiClient do
       context 'when encountering a retryable error' do
         it 'retries the request with the specified number of attempts' do
           response_double = instance_double('Typhoeus::Response', success?: false, code: 500, headers: {}, body: '')
-          allow(response_double).to receive(:timed_out?).and_return(false)
           allow(response_double).to receive(:status_message).and_return('Internal Server Error') # Add this line
 
           request_double = instance_double('Typhoeus::Request', run: response_double)
