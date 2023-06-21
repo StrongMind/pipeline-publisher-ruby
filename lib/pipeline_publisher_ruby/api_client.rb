@@ -73,6 +73,8 @@ module PipelinePublisher
 
       rescue
         attempts += 1
+        retry_wait_time = (2**attempts) * 0.1
+        sleep(retry_wait_time)
         retry if attempts <= 5
         fail ApiError.new('Maximum number of attempts reached')
 
